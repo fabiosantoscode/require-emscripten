@@ -1,0 +1,19 @@
+{
+  "name": "require-emscripten",
+  "version": "0.0.0",
+  "description": "Require c++ or c files and have them compiled through emscripten!",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script/register"
+  },
+  "author": "",
+  "license": "WTFPL",
+  "dependencies": {
+    "coffee-script": "^1.9.1",
+    "execSync": "^1.0.2",
+    "mocha": "^2.2.1"
+  }
+}
