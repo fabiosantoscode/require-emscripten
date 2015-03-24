@@ -35,5 +35,7 @@ describe 'patchRequire', () ->
         ok mod, 'mod exists'
         ok.equal typeof mod, 'object', 'mod is an obj'
 
+        ok.equal typeof mod._foo, 'function', 'mod._foo is a function'
+
         ok.equal mod._foo(), 42
 
