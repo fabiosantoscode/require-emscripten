@@ -1,0 +1,3 @@
+test/.*
+*.requireemscripten.js
+node_modules
