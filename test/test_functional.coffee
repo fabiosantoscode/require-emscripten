@@ -46,7 +46,6 @@ describe 'browserify integration', () ->
         fs.writeFileSync __dirname + '/.test-functional-with-browserify.js', '''
             var requireEmscripten = require('require-emscripten');
             var foo = require("''' + testcppfile + '''")._foo;
-            console.log(foo)
         '''
 
         outp = sh([

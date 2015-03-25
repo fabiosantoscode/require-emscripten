@@ -17,7 +17,6 @@ function end() {
 }
 
 module.exports = function (file) {
-    console.log('exporting plugin')
     if (/\.(cpp|cc|c)$/.test(file)) {
         var all = ''
         return through(function write(d) {

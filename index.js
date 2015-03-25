@@ -4,7 +4,6 @@ var fs = require('fs')
 var sh = require('child_process').execSync
 
 module.exports = function requireEmscripten(file) {
-    // TODO take these opts
     return require(compile(file));
 }
 
