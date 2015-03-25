@@ -3,6 +3,7 @@ requireEmscripten = require '..'
 {compile, patchRequire} = requireEmscripten
 ok = require 'assert'
 fs = require 'fs'
+sh = require('child_process').execSync
 
 testcppfile = __dirname + '/.reqemtest.c'
 fs.writeFileSync testcppfile, '''
@@ -39,4 +40,20 @@ describe 'patchRequire', () ->
         ok.equal typeof mod._foo, 'function', 'mod._foo is a function'
 
         ok.equal mod._foo(), 42
+
+describe 'browserify integration', () ->
+    it 'seems to work lel', () ->
+        fs.writeFileSync __dirname + '/.test-functional-with-browserify.js', '''
+            var requireEmscripten = require('require-emscripten');
+            var foo = require("''' + testcppfile + '''")._foo;
+            console.log(foo)
+        '''
+
+        outp = sh([
+            './node_modules/browserify/bin/cmd.js',
+            '-t ' + __dirname + '/../browserify/transform.js',
+            __dirname + '/.test-functional-with-browserify'
+        ].join(' '))
+
+        ok outp
 

@@ -6,13 +6,15 @@
   "directories": {
     "test": "test"
   },
+  "browser": "./browserify/fake-for-browsers.js",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script/register"
+    "test": "mocha --compilers coffee:coffee-script/register --slow 2000 --timeout 30000"
   },
   "author": "",
   "license": "WTFPL",
-  "dependencies": {
+  "devDependencies": {
     "coffee-script": "^1.9.1",
-    "mocha": "^2.2.1"
+    "mocha": "^2.2.1",
+    "browserify": "*"
   }
 }
