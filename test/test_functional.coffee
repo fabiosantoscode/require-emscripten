@@ -42,17 +42,36 @@ describe 'patchRequire', () ->
         ok.equal mod._foo(), 42
 
 describe 'browserify integration', () ->
-    it 'seems to work lel', () ->
-        fs.writeFileSync __dirname + '/.test-functional-with-browserify.js', '''
-            var requireEmscripten = require('require-emscripten');
-            var foo = require("''' + testcppfile + '''")._foo;
-        '''
-
-        outp = sh([
+    toBrowserified = (s) ->
+        filename = filename || '.test-functional-with-browserify.js'
+        fs.writeFileSync(__dirname + '/' + filename, s)
+        return sh [
             './node_modules/browserify/bin/cmd.js',
             '-t ' + __dirname + '/../browserify/transform.js',
-            __dirname + '/.test-functional-with-browserify'
-        ].join(' '))
+            __dirname + '/' + filename,
+        ].join ' '
 
-        ok outp
+    it 'seems to work lel', () ->
+        ok toBrowserified('''
+            var requireEmscripten = require('require-emscripten');
+            var foo = require("''' + testcppfile + '''")._foo;
+        ''', __dirname + '/.test-functional-with-browserify.js')
+
+    it 'finds C code and does its thing', () ->
+        fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
+        ok /_foo/.test toBrowserified('require("./my-c-file.c")')
+
+    it 'can operate on requireEmscripten() calls too (and it would rather!)', () ->
+        fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
+        result = toBrowserified '''
+            var requireEmscripten = require('require-emscripten')
+            requireEmscripten("./my-c-file.c")
+            console.log("YHEA")
+        '''
+
+        ok result, 'there is some result'
+
+        ok(/YHEA/.test(result), 'it has our console.log still')
+        ok(/_foo/.test(result), 'it has _foo somewhere in it')
+        ok(/require.*?\/my-c-file.c/.test(result), 'it contains the require() call redirected to the C file')
 

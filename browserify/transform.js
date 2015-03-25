@@ -2,19 +2,8 @@
 
 var through = require('through')
 var fs = require('fs')
+var staticMod = require('static-module')
 var reqEm = require('..')
-
-var everything = ''
-var everymodule = []
-
-function write(d) {
-    everything += d
-}
-
-function end() {
-    this.queue(everything)
-    this.queue(null)
-}
 
 module.exports = function (file) {
     if (/\.(cpp|cc|c)$/.test(file)) {
@@ -26,7 +15,13 @@ module.exports = function (file) {
             this.queue(fs.readFileSync(fname))
             this.queue(null)
         })
+    } else {
+        // Replaces require('require-emscripten')('file.c') (and variations thereof) with require('file.c')
+        return staticMod({
+            'require-emscripten': function (requiredFile) {
+                return 'require("' + requiredFile.replace('"', '\\"') + '");'
+            }
+        })
     }
-    return through(write, end)
 }
 
