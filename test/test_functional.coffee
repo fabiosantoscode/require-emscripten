@@ -1,5 +1,6 @@
 
-{compile, patchRequire} = require '..'
+requireEmscripten = require '..'
+{compile, patchRequire} = requireEmscripten
 ok = require 'assert'
 fs = require 'fs'
 
@@ -14,11 +15,11 @@ fs.writeFileSync testcppfile, '''
     }
 '''
 
-describe 'compile()', () ->
+describe 'require("require-emscripten")()', () ->
     mod = null
 
     it 'returns a Module object', () ->
-        mod = compile testcppfile
+        mod = requireEmscripten testcppfile
         ok mod, 'returns a module obj'
         ok.equal typeof mod, 'object'
 

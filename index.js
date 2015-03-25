@@ -3,8 +3,14 @@
 var fs = require('fs')
 var sh = require('child_process').execSync
 
-var compile = exports.compile = function (file, opt) {
-    opt = opt || {}
+module.exports = function requireEmscripten(file) {
+    // TODO take these opts
+    return require(compile(file));
+}
+
+var compile =
+module.exports.compile =
+function (file) {
     var outp = file + '.requireemscripten.js'
     sh('emcc ' + [
         file,
@@ -13,18 +19,16 @@ var compile = exports.compile = function (file, opt) {
         ' -o ' + outp
     ].join(' '))
 
-    if (opt.returnFilename) {
-        return outp
-    }
-    return require(outp);
+    return outp
 }
 
-exports.patchRequire = function (opt) {
+module.exports.patchRequire =
+function patchRequire(opt) {
     opt = opt || {}
     var extensions = opt.extensions || ['.cpp', '.cc', '.c']
 
     function compileAndRequire(module, filename) {
-        filename = compile(filename, { returnFilename: true })
+        filename = compile(filename)
         return require.extensions['.js'](module, filename)
     }
 
