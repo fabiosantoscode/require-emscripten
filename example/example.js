@@ -1,5 +1,5 @@
 
-var requireEmscripten = require('require-emscripten')
+var requireEmscripten = require('..')
 
 // Patch our require() function so we can require C and stuff
 requireEmscripten.patchRequire()

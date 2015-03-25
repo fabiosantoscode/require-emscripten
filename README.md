@@ -3,7 +3,7 @@
 
 Require C/C++ (and other LLVM languages) in node and in the browser!
 
-This will use `emcc` in your PATH to compile things you require() in node and give them to you in java scripts. Just remember that exported functions in emscripten begin with an underscore ;)
+This will use Emscripten's `emcc` in your PATH to compile things you require() in node and turn your exported functions into callable javascript functions. Just remember that exported functions in emscripten begin with an underscore ;)
 
 # Example
 
@@ -26,7 +26,7 @@ If you don't want to patch the require() function (or want to use emscripten on 
 
 # How to use
 
- * Install and source emscripten so that `emcc` is in your PATH. Refer to their easy instructions on how to do this.
+ * Install and source emscripten so that `emcc` is in your PATH. Refer to their [easy instructions on how to do this](http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html#windows-osx-and-linux-installing-the-portable-sdk).
  * `npm install require-emscripten`
  * Either do `require('require-emscripten').patchRequire()` or `var requireEmscripten = require('require-emscripten'); requireEmscripten('/path/to/c-things.c')`.
 
