@@ -10,11 +10,11 @@ module.exports = function requireEmscripten(file) {
 var readConfig =
 module.exports.readConfig =
 function readConfig(file) {
-    var theComment = file.match(new RegExp("/\\*\\s*?require-emscripten:?\\s*?(.+)\\s*?\\*/"))
+    var theComment = file.match(/\/\*\s*?require-emscripten:?\s*?(.*?)\s*?\*\//)
 
-    if (!theComment) { return [] }
+    if (!theComment) { return '' }
 
-    return theComment[1]
+    return theComment[1].trim()
 }
 
 var compile =
