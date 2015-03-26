@@ -2,7 +2,7 @@
 reqEm = require '..'
 ok = require 'assert'
 
-describe.only 'readConfig', () ->
+describe 'readConfig', () ->
     it 'finds opts in the top of files', ()->
         conf = reqEm.readConfig('\n/* require-emscripten -s WARN_ON_UNDEFINED_SYMBOLS=1 lel */\n\n\n')
         ok.equal conf, '-s WARN_ON_UNDEFINED_SYMBOLS=1 lel'

@@ -35,8 +35,6 @@ function (file) {
         '-o ' + outp
     ].join(' ')
 
-    console.log('running command', JSON.stringify(command))
-
     sh(command)
 
     return outp
