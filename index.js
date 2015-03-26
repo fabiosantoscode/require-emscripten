@@ -7,16 +7,37 @@ module.exports = function requireEmscripten(file) {
     return require(compile(file));
 }
 
+var readConfig =
+module.exports.readConfig =
+function readConfig(file) {
+    var theComment = file.match(new RegExp("/\\*\\s*?require-emscripten:?\\s*?(.+)\\s*?\\*/"))
+
+    if (!theComment) { return [] }
+
+    return theComment[1]
+}
+
 var compile =
 module.exports.compile =
 function (file) {
     var outp = file + '.requireemscripten.js'
-    sh('emcc ' + [
+
+    var inputFile = fs.readFileSync(file, 'utf-8')
+
+    var opts = readConfig(inputFile)
+
+    var command = [
+        'emcc',
         file,
-        '-s LINKABLE=1',
         '-s EXPORT_ALL=1',
-        ' -o ' + outp
-    ].join(' '))
+        '-s LINKABLE=1',
+        opts,
+        '-o ' + outp
+    ].join(' ')
+
+    console.log('running command', JSON.stringify(command))
+
+    sh(command)
 
     return outp
 }
