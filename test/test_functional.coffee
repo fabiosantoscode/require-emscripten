@@ -51,12 +51,6 @@ describe 'browserify integration', () ->
             __dirname + '/' + filename,
         ].join ' '
 
-    it 'seems to work lel', () ->
-        ok toBrowserified('''
-            var requireEmscripten = require('require-emscripten');
-            var foo = require("''' + testcppfile + '''")._foo;
-        ''', __dirname + '/.test-functional-with-browserify.js')
-
     it 'finds C code and does its thing', () ->
         fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
         ok /_foo/.test toBrowserified('require("./my-c-file.c")')
