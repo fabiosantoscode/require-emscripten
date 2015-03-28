@@ -17,10 +17,13 @@ module.exports = function (file) {
         })
     } else {
         // Replaces require('require-emscripten')('file.c') (and variations thereof) with require('file.c')
+        var fakeRequireEmscripten =
+        function fakeRequireEmscripten (requiredFile) {
+            return 'require("' + requiredFile.replace('"', '\\"') + '")'
+        }
+        fakeRequireEmscripten.patchRequire = function () { return '' }
         return staticMod({
-            'require-emscripten': function (requiredFile) {
-                return 'require("' + requiredFile.replace('"', '\\"') + '");'
-            }
+            'require-emscripten': fakeRequireEmscripten
         })
     }
 }

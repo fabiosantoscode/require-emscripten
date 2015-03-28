@@ -55,6 +55,9 @@ describe 'browserify integration', () ->
         fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
         ok /_foo/.test toBrowserified('require("./my-c-file.c")')
 
+    it 'regression: does not break when seeing requireEmscripten.patchRequire()', () ->
+        ok toBrowserified('require("require-emscripten").patchRequire();'), 'did not break!'
+
     it 'can operate on requireEmscripten() calls too (and it would rather!)', () ->
         fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
         result = toBrowserified '''
