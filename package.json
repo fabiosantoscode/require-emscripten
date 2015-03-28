@@ -16,6 +16,7 @@
     "browserify": "^9.0.3",
     "coffee-script": "^1.9.1",
     "mocha": "^2.2.1",
+    "phantomjs": "^1.9.16",
     "ws": "^0.7.1"
   },
   "dependencies": {
