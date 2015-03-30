@@ -1,6 +1,8 @@
 
 # require-emscripten
 
+[![Join the chat at https://gitter.im/fabiosantoscode/require-emscripten](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fabiosantoscode/require-emscripten?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Require C/C++ (and other LLVM languages) in node and in the browser!
 
 This will use Emscripten's `emcc` in your PATH to compile things you require() in node and turn your exported functions into callable javascript functions. Just remember that exported functions in emscripten begin with an underscore ;)
