@@ -62,18 +62,3 @@ function (file) {
     return outp
 }
 
-module.exports.patchRequire =
-function patchRequire(opt) {
-    opt = opt || {}
-    var extensions = opt.extensions || ['.cpp', '.cc', '.c']
-
-    function compileAndRequire(module, filename) {
-        filename = compile(filename)
-        return require.extensions['.js'](module, filename)
-    }
-
-    for (var i = 0; i < extensions.length; i++) {
-        require.extensions[extensions[i]] = compileAndRequire
-    }
-}
-

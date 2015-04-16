@@ -1,17 +1,11 @@
 
 module.exports = function requireEmscripten() {
-    throw new Error('Not implemented: calling requireEmscripten in browserified code. call requireEmscripten.patchRequire() and then use the normal require.')
+    throw new Error('require-emscripten: It seems like you\'re not using the browserify transform. If you are, it\'s broken. Report it!')
 }
 
 module.exports.compile = function (filename) {
     // Do no work here
     // But return expected thing
     return filename + '.requireemscripten.js'
-}
-
-module.exports.patchRequire = function () {
-    // Do no work here
-    // Real work is done in the transform :)
-    return;
 }
 

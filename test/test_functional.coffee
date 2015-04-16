@@ -1,6 +1,5 @@
 
 requireEmscripten = require '..'
-{compile, patchRequire} = requireEmscripten
 ok = require 'assert'
 fs = require 'fs'
 sh = require('child_process').execSync
@@ -29,18 +28,6 @@ describe 'require("require-emscripten")()', () ->
         ok.equal typeof mod._foo, 'function', 'mod.foo is a func'
         ok.equal mod._foo(), 42
 
-describe 'patchRequire', () ->
-    it 'patches require', () ->
-        patchRequire()
-        mod = require testcppfile
-
-        ok mod, 'mod exists'
-        ok.equal typeof mod, 'object', 'mod is an obj'
-
-        ok.equal typeof mod._foo, 'function', 'mod._foo is a function'
-
-        ok.equal mod._foo(), 42
-
 describe 'browserify integration', () ->
     toBrowserified = (s) ->
         filename = filename || '.test-functional-with-browserify.js'
@@ -51,14 +38,7 @@ describe 'browserify integration', () ->
             __dirname + '/' + filename,
         ].join ' '
 
-    it 'finds C code and does its thing', () ->
-        fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
-        ok /_foo/.test toBrowserified('require("./my-c-file.c")')
-
-    it 'regression: does not break when seeing requireEmscripten.patchRequire()', () ->
-        ok toBrowserified('require("require-emscripten").patchRequire();'), 'did not break!'
-
-    it 'can operate on requireEmscripten() calls too (and it would rather!)', () ->
+    it 'can transform requireEmscripten() calls', () ->
         fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
         result = toBrowserified '''
             var requireEmscripten = require('require-emscripten')

@@ -17,15 +17,7 @@ This will use Emscripten's `emcc` in your PATH to compile things you require() i
         return i++;
     }
 
-Here's an example using `patchRequire()` to patch our requires to C/C++ files.
-
-    require('require-emscripten').patchRequire()
-    var counter = require('./example/test.c')._foo  // do NOT let node.js print the whole module to the console. It will get your CPU to 100% and take AGES
-    console.log(counter())  // -> 0
-    console.log(counter())  // -> 1
-    console.log(counter())  // -> 2
-
-If you don't want to patch the require() function (or want to use emscripten on source files which are not .c or .cpp), you can use requireEmscripten as a function:
+Open up the node console and type:
 
     var requireEmscripten = require('require-emscripten')
     var counter = requireEmscripten(__dirname + '/example/test.c')._foo  // do NOT let node.js print the whole module to the console. It will get your CPU to 100% and take AGES
@@ -41,8 +33,8 @@ If you don't want to patch the require() function (or want to use emscripten on 
 
 # How to use
 
- * Either do `require('require-emscripten').patchRequire()` or `var requireEmscripten = require('require-emscripten'); requireEmscripten('/path/to/c-things.c')`.
- * your `require()` / `requireEmscripten()` call will return a Module object straight from Emscripten, it has [this API](http://kripken.github.io/emscripten-site/docs/api_reference/preamble.js.html#preamble-js) and any function you exported from your C code will be in it, but their name will have a leading underscore. EG: `_foo` if your function's name is `foo`.
+ * `var requireEmscripten = require('require-emscripten'); requireEmscripten('/path/to/c-things.c')`.
+ * your `requireEmscripten()` call will return a Module object straight from Emscripten, it has [this API](http://kripken.github.io/emscripten-site/docs/api_reference/preamble.js.html#preamble-js) and any function you exported from your C code will be in it, but their name will have a leading underscore. EG: `_foo` if your function's name is `foo`.
  * You can write directives in your C/C++ files to customize the emcc command, just add a C-style comment like this: `/* require-emscripten: -O3 */` and the command gets -O3 added as an argument. To see more arguments to the `emcc` command, run `emcc --help`.
 
 # Use in the browser with browserify
@@ -65,13 +57,6 @@ This loads requireEmscripten into node. Basic stuff. requireEmscripten is a func
 Compiles a file into JS using emscripten, then requires it. Basically `sh('emcc $filename -o $filename.requireemscripten.js'); return require(filename + '.requireemscripten.js');`
 
 You can customize the arguments passed to `emcc` by adding special comments to your files you want to compile.
-
-
-## requireEmscripten.patchRequire(/*{ extensions: ['.c', '.cc', '.cpp'] }*/); var myModule = require('./my-module.c')
-
-Using the `require.extensions` override API (which is kinda deprecated), override the default require() behaviour in some extensions. Change the `extensions` option if you need to require non-c/cc/cpp files.
-
-This is what allows you to do `require('./my-c-module.c')` as if it were a node module.
 
 
 ## myModule (a compiled Module object which you got from requireEmscripten() or require())
@@ -109,7 +94,7 @@ If your language is not recognized by `emcc`, you need to find another way to co
 
 To do that, just write a command in this option and require-emscripten will execute it.
 
-So if you're writing [rust](http://rust-lang.org) (which compiles to LLVM bitcode), you can use a compiler 
+So if you're writing [rust](http://rust-lang.org) (which compiles to LLVM bitcode), you can use this directive to tell require-emscripten how to build you some rust :)
 
 
 Some variables are expanded:
