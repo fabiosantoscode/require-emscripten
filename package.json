@@ -16,11 +16,14 @@
     "browserify": "^9.0.3",
     "coffee-script": "^1.9.1",
     "mocha": "^2.2.1",
-    "phantomjs": "^1.9.16",
     "ws": "^0.7.1"
   },
   "dependencies": {
     "static-module": "^1.1.2",
     "through": "^2.3.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabiosantoscode/require-emscripten"
   }
 }
