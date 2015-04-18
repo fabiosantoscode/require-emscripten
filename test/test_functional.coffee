@@ -52,3 +52,63 @@ describe 'browserify integration', () ->
         ok(/_foo/.test(result), 'it has _foo somewhere in it')
         ok(/require.*?\/my-c-file.c/.test(result), 'it contains the require() call redirected to the C file')
 
+    context 'generated code', () ->
+        doSkip = false
+        before () ->
+            try
+                version = sh 'phantomjs --version'
+                version = version.trim().split('.')
+                if +version[0] < 2
+                    doSkip = true
+            catch e
+                doSkip = true
+
+        it 'generated code with -O1 runs in browser', () ->
+            runWithOX(1)
+
+        it 'generated code with -O2 runs in browser', () ->
+            runWithOX(2)
+
+        it 'generated code with -O3 runs in browser', () ->
+            runWithOX(3)
+
+        runWithOX = (x) ->
+            if doSkip
+                console.log 'Only phantomjs >= 2.x.x can run these tests. Skipping.'
+                return
+
+            fs.writeFileSync(
+                __dirname + '/my-c-file.c',
+                """
+                /* require-emscripten: -O#{x} */
+                #include <stdio.h>
+                int printer(int number) {
+                    return number+1;
+                }
+                """)
+
+            fs.writeFileSync(
+                __dirname + '/bundle',
+                ('''
+                !(function(){
+                ''' +
+                toBrowserified('''
+                    try {
+                        var cMod = require('require-emscripten')('./my-c-file.c')
+                        console.log(cMod._printer(10))
+                    } catch(e) {
+                        console.log(e)
+                    }
+                    phantom.exit(0)
+                ''') +
+                ' \n;}());'))
+
+            stdout = sh "phantomjs #{__dirname}/bundle"
+            ok(/11/.test(stdout), 'standard output did not contain expected result!')
+
+        afterEach () ->
+            try
+                fs.unlinkSync(__dirname + '/my-c-file.c')
+            try
+                fs.unlinkSync(__dirname + '/bundle')
+
