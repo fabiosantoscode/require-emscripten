@@ -89,9 +89,6 @@ describe 'browserify integration', () ->
 
             fs.writeFileSync(
                 __dirname + '/bundle',
-                ('''
-                !(function(){
-                ''' +
                 toBrowserified('''
                     try {
                         var cMod = require('require-emscripten')('./my-c-file.c')
@@ -100,8 +97,7 @@ describe 'browserify integration', () ->
                         console.log(e)
                     }
                     phantom.exit(0)
-                ''') +
-                ' \n;}());'))
+                '''))
 
             stdout = sh "phantomjs #{__dirname}/bundle"
             ok(/11/.test(stdout), 'standard output did not contain expected result!')
