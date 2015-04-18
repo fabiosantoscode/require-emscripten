@@ -8,7 +8,7 @@
   },
   "browser": "./browserify/fake-for-browsers.js",
   "scripts": {
-    "test": "mocha --compilers coffee:coffee-script/register --slow 2000 --timeout 30000"
+    "test": "mocha --compilers coffee:coffee-script/register --slow 2000 --timeout 60000"
   },
   "author": "",
   "license": "WTFPL",
