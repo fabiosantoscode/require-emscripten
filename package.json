@@ -25,5 +25,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/fabiosantoscode/require-emscripten"
-  }
+  },
+  "keywords": [
+    "browserify-transform"
+  ]
 }
