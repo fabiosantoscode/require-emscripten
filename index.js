@@ -47,6 +47,9 @@ function (file) {
     var command = [
         'emcc',
         file,
+        '--pre-js pre-js.prejs',
+        '--post-js post-js.postjs',
+        '--memory-init-file 0',
         '-s EXPORT_ALL=1',
         '-s LINKABLE=1',
         config.command,

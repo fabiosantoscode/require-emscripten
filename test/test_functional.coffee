@@ -57,10 +57,11 @@ describe 'browserify integration', () ->
         before () ->
             try
                 version = sh 'phantomjs --version'
-                version = version.trim().split('.')
+                version = (version+'').trim().split('.')
                 if +version[0] < 2
                     doSkip = true
             catch e
+                console.log e
                 doSkip = true
 
         it 'generated code with -O1 runs in browser', () ->
@@ -100,7 +101,9 @@ describe 'browserify integration', () ->
                 '''))
 
             stdout = sh "phantomjs #{__dirname}/bundle"
-            ok(/11/.test(stdout), 'standard output did not contain expected result!')
+            if not /11/.test(stdout+'')
+                console.log stdout+''
+                ok false, 'standard output did not contain expected result!'
 
         afterEach () ->
             try
