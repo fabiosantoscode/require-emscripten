@@ -1,6 +1,6 @@
 {
   "name": "require-emscripten",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Require c++ or c files and have them compiled through emscripten!",
   "main": "index.js",
   "directories": {
@@ -15,7 +15,8 @@
   "devDependencies": {
     "browserify": "^9.0.3",
     "coffee-script": "^1.9.1",
-    "mocha": "^2.2.1"
+    "mocha": "^2.2.1",
+    "sinon": "^1.14.1"
   },
   "dependencies": {
     "static-module": "^1.1.2",

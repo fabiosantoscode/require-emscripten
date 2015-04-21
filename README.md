@@ -58,7 +58,6 @@ Compiles a file into JS using emscripten, then requires it. Basically `sh('emcc 
 
 You can customize the arguments passed to `emcc` by adding special comments to your files you want to compile.
 
-
 ## myModule (a compiled Module object which you got from requireEmscripten() or require())
 
 This is an Emscripten Module object. Refer to their docs to figure out how to work with it, but the basics are:
@@ -66,6 +65,15 @@ This is an Emscripten Module object. Refer to their docs to figure out how to wo
  * DO NOT let node print this to the console, unless you want node to freeze for a long time. You may do this accidentally in the node REPL if you just go in and type `requireEmscripten('/some/c/file.c')` because the REPL prints the values in it. Instead do `var myModule = ...` and you're safe.
  * Your exported functions begin with an underscore. So instead of calling `myModule.foo`, call `myModule._foo()`
  * If they're not here it means you didn't export them. In c++ this means you have to wrap them in an `extern "C" { ... }` thing. In rust, this means it must be marked as `#[no_mangle]` (new line) `pub extern fn`. Etc. Refer to your language's documentation to figure out how they export things to shared object libraries and this should be pretty much the same.
+
+
+## requireEmscripten(__dirname + '/my-module.c', { toBitcode: 'my-compiler --input-file $INPUT --output-llvm $OUTPUT', cliArgs: '-O2' });
+
+The second argument to `requireEmscripten` is an object containing options. These are the same options you can pass on the top of your C/C++ files, albeit passed as a plain JS object.
+
+The `toBitcode` option denotes a command you might want to use on the file before emscripten sees it. For example, since emscripten cannot read Lisp or Rust, you can put a Rust or Clasp (LLVM Lisp) compilation command in this option. Use `$INPUT` and `$OUTPUT` in this string. They will be replaced with absolute paths to your input and output (llvm bitcode) files, respectively.
+
+The `cliArgs` option is a string containing more CLI arguments to the `emcc` command. Examples are `-O2` to enable some optimization.
 
 
 # Directives to the compiler
