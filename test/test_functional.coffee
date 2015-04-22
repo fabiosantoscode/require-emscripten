@@ -39,6 +39,40 @@ describe 'require("require-emscripten")() in node', () ->
     it 'Works with -O3', () ->
         worksWithOX(3)
 
+describe 'compiling rust code', () ->
+    rustfile = __dirname + '/test.rs'
+    doSkip = true
+
+    before () ->
+        fs.writeFileSync rustfile, '''
+            /* require-emscripten-to-bitcode: rustc --crate-type lib --emit llvm-bc $INPUT -o $OUTPUT */
+
+            #[no_mangle]
+            pub extern fn foo() -> i32 {
+                return lel();
+            }
+
+            fn lel() -> i32 {
+                return 42;
+            }
+        '''
+
+        try
+            v = sh 'rustc --version'
+            if v
+                doSkip = false
+
+    it.only 'well, works', () ->
+        if doSkip
+            return
+        rustmod = requireEmscripten rustfile
+        ok.equal typeof rustmod, 'object', 'module was returned'
+        ok.equal rustmod._foo(), 42, 'module function works'
+
+    after () ->
+        try
+            unlinkSync rustfile
+
 describe 'browserify integration', () ->
     toBrowserified = (s) ->
         filename = filename || '.test-functional-with-browserify.js'

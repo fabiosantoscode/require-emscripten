@@ -12,8 +12,9 @@ module.exports.shellReplace =
 function shellReplace(string, variables) {
     for (var key in variables) if (variables.hasOwnProperty(key)) {
         string = string
-            .replace(new RegExp('\\$' + key, 'g'), variables[string])
+            .replace('$' + key, variables[key])
     }
+    return string
 }
 
 var readConfig =
@@ -46,10 +47,10 @@ function (file, config) {
 
     if (config.toBitcode) {
         // Input file for emscripten is the .bc output from the user compiler
+        var toBitcodeCommand = module.exports.shellReplace(
+            config.toBitcode, { INPUT: file, OUTPUT: bcOutp })
+        cp.execSync(toBitcodeCommand)
         file = bcOutp
-        cp.execSync(
-            module.exports.shellReplace(
-                config.toBitcode, { INPUT: file, OUTPUT: bcOutp }))
     }
 
     var command = [
