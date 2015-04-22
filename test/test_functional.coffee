@@ -15,7 +15,7 @@ fs.writeFileSync testcppfile, '''
     }
 '''
 
-describe 'require("require-emscripten")()', () ->
+describe 'require("require-emscripten")() in node', () ->
     mod = null
 
     it 'returns a Module object', () ->
@@ -23,10 +23,21 @@ describe 'require("require-emscripten")()', () ->
         ok mod, 'returns a module obj'
         ok.equal typeof mod, 'object'
 
-    it 'returns callable useful functions', () ->
-        ok mod._foo, 'mod.foo exists'
-        ok.equal typeof mod._foo, 'function', 'mod.foo is a func'
+    worksWithOX = (X) ->
+        mod = requireEmscripten testcppfile, cliArgs: "-O#{X}"
+        ok mod, 'returns a module obj'
+        ok.equal typeof mod, 'object'
+        ok mod._foo 'mod._foo exists'
         ok.equal mod._foo(), 42
+
+    it 'Works with -O1', () ->
+        worksWithOX(1)
+
+    it 'Works with -O2', () ->
+        worksWithOX(2)
+
+    it 'Works with -O3', () ->
+        worksWithOX(3)
 
 describe 'browserify integration', () ->
     toBrowserified = (s) ->
