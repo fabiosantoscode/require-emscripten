@@ -4,19 +4,23 @@ ok = require 'assert'
 fs = require 'fs'
 sh = require('child_process').execSync
 
-testcppfile = __dirname + '/.reqemtest.c'
-fs.writeFileSync testcppfile, '''
-    int foo() {
-        return 42;
-    }
-
-    int bar(int a, int b) {
-        return a + b;
-    }
-'''
-
 describe 'require("require-emscripten")() in node', () ->
-    mod = null
+    testcppfile = __dirname + '/reqemtest.c'
+
+    before () ->
+        fs.writeFileSync testcppfile, '''
+            int foo() {
+                return 42;
+            }
+
+            int bar(int a, int b) {
+                return a + b;
+            }
+        '''
+
+    after () ->
+        try
+            fs.unlinkSync testcppfile
 
     it 'returns a Module object', () ->
         mod = requireEmscripten testcppfile
@@ -62,26 +66,29 @@ describe 'compiling rust code', () ->
             if v
                 doSkip = false
 
-    it.only 'well, works', () ->
+    after () ->
+        try
+            fs.unlinkSync rustfile
+
+    it 'well, works', () ->
         if doSkip
             return
         rustmod = requireEmscripten rustfile
         ok.equal typeof rustmod, 'object', 'module was returned'
         ok.equal rustmod._foo(), 42, 'module function works'
 
-    after () ->
-        try
-            unlinkSync rustfile
-
 describe 'browserify integration', () ->
     toBrowserified = (s) ->
-        filename = filename || '.test-functional-with-browserify.js'
-        fs.writeFileSync(__dirname + '/' + filename, s)
-        return sh [
+        filename = __dirname + '/.test-functional-with-browserify.js'
+        fs.writeFileSync(filename, s)
+        ret = sh [
             './node_modules/browserify/bin/cmd.js',
             '-t ' + __dirname + '/../browserify/transform.js',
-            __dirname + '/' + filename,
+            filename,
         ].join ' '
+        try
+            fs.unlinkSync filename
+        return ret
 
     it 'can transform requireEmscripten() calls', () ->
         fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
