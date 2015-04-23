@@ -38,7 +38,7 @@ var compile =
 module.exports.compile =
 function (file, config) {
     var outp = file + '.requireemscripten.js'
-    var bcOutp = file + '.requiremscripten.bc'
+    var bcOutp = file + '.requireemscripten.bc'
 
     var inputFile = fs.readFileSync(file, 'utf-8')
 
