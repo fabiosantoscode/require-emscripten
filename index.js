@@ -53,11 +53,14 @@ function (file, config) {
         file = bcOutp
     }
 
+    var preJs = __dirname + '/pre-js.prejs'
+    var postJs = __dirname + '/post-js.postjs'
+
     var command = [
         'emcc',
         file,
-        '--pre-js pre-js.prejs',
-        '--post-js post-js.postjs',
+        '--pre-js', preJs,
+        '--post-js', postJs,
         '--memory-init-file 0',
         '-s EXPORT_ALL=1',
         '-s LINKABLE=1',
