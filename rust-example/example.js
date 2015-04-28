@@ -1,3 +1,3 @@
-require('..').patchRequire({ extensions: ['.rs'] })
-console.log(require('./main.rs')._foo())
+var requireEmscripten = require('..')
+console.log(requireEmscripten(__dirname + '/main.rs')._foo())
 

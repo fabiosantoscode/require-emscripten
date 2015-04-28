@@ -1,11 +1,9 @@
 
 var requireEmscripten = require('..')
 
-// Patch our require() function so we can require C and stuff
-requireEmscripten.patchRequire()
+// Require us some C!
 
-var counter = require('./test.c')._foo
-
+var counter = requireEmscripten(__dirname + '/test.c')._foo
 
 log(counter())  // -> 0
 log(counter())  // -> 1

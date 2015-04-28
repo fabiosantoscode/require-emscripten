@@ -16,7 +16,6 @@ module.exports = function (file) {
             path.join(dir, requiredFile))
         return 'require("' + f + '")'
     }
-    fakeRequireEmscripten.patchRequire = function () { return '' }
     return staticMod({
         'require-emscripten': fakeRequireEmscripten,
     }, {
