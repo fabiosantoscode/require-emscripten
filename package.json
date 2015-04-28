@@ -1,6 +1,6 @@
 {
   "name": "require-emscripten",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Require c++ or c files and have them compiled through emscripten!",
   "main": "index.js",
   "directories": {
