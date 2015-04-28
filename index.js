@@ -56,19 +56,24 @@ function (file, config) {
     var preJs = __dirname + '/pre-js.prejs'
     var postJs = __dirname + '/post-js.postjs'
 
-    var command = [
-        'emcc',
+    var commandArgs = [
         file,
         '--pre-js', preJs,
         '--post-js', postJs,
-        '--memory-init-file 0',
-        '-s EXPORT_ALL=1',
-        '-s LINKABLE=1',
+        '--memory-init-file', '0',
+        '-s', 'EXPORT_ALL=1',
+        '-s', 'LINKABLE=1',
         config.cliArgs,
         '-o ' + outp
-    ].join(' ')
+    ];
 
-    cp.execSync(command)
+    commandArgs = commandArgs
+        .concat(config.cliArgs ?
+            config.cliArgs.split(/\s+/g) :
+            [])
+        .concat(['-o', outp])
+
+    cp.spawnSync('emcc', commandArgs)
 
     if (config.toBitcode) {
         fs.unlinkSync(bcOutp)
