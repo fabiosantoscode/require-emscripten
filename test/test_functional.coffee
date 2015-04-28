@@ -91,10 +91,10 @@ describe 'browserify integration', () ->
         return ret
 
     it 'can transform requireEmscripten() calls', () ->
-        fs.writeFileSync __dirname + '/./my-c-file.c', 'int foo(){return 2;}'
+        fs.writeFileSync __dirname + '/my-c-file.c', 'int foo(){return 2;}'
         result = toBrowserified '''
             var requireEmscripten = require('require-emscripten')
-            requireEmscripten("./my-c-file.c")
+            requireEmscripten(__dirname + "/my-c-file.c")
             console.log("YHEA")
         '''
 
@@ -144,7 +144,7 @@ describe 'browserify integration', () ->
                 __dirname + '/bundle',
                 toBrowserified('''
                     try {
-                        var cMod = require('require-emscripten')('./my-c-file.c')
+                        var cMod = require('require-emscripten')(__dirname + '/my-c-file.c')
                         console.log(cMod._printer(10))
                     } catch(e) {
                         console.log(e)
