@@ -1,2 +1,3 @@
 *.requireemscripten.js
+*.requireemscripten.bc
 node_modules
