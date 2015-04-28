@@ -1,7 +1,5 @@
 'use strict'
 
-var through = require('through')
-var stream = require('stream')
 var fs = require('fs')
 var path = require('path')
 var staticMod = require('static-module')
