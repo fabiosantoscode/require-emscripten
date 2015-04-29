@@ -63,8 +63,6 @@ function (file, config) {
         '--memory-init-file', '0',
         '-s', 'EXPORT_ALL=1',
         '-s', 'LINKABLE=1',
-        config.cliArgs,
-        '-o ' + outp
     ];
 
     commandArgs = commandArgs
