@@ -1,3 +1,4 @@
 *.requireemscripten.js
 *.requireemscripten.bc
 node_modules
+emsdk_portable
