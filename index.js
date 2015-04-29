@@ -1,10 +1,21 @@
 'use strict'
 
+var assert = require('assert')
+var path = require('path')
 var fs = require('fs')
 var cp = require('child_process')
 
 module.exports = function requireEmscripten(file, options) {
-    return require(module.exports.compile(file, options));
+    assert(path.isAbsolute(file),
+        'requireEmscripten() needs an absolute file path, unlike require()!')
+    var outFile = file + '.requireemscripten.js'
+    if (require.cache && (outFile in require.cache)) {
+        // We've already compiled this, and required it.
+        // Node has helpfully cached it, so no need to recompile.
+        return require(outFile)
+    }
+    compile(file, options)
+    return require(outFile)
 }
 
 var shellReplace =
