@@ -31,6 +31,12 @@ function shellReplace(string, variables) {
 var readConfig =
 module.exports.readConfig =
 function readConfig(file) {
+    var emccExecutable = file.match(/\/\*\s*?require-emscripten-emcc-executable[: ]\s*?(.*?)\s*?\*\//)
+
+    if (emccExecutable) {
+        emccExecutable = emccExecutable[1]
+    }
+
     var toBitcode = file.match(/\/\*\s*?require-emscripten-to-bitcode[: ]\s*?(.*?)\s*?\*\//)
 
     if (toBitcode) {
@@ -40,6 +46,7 @@ function readConfig(file) {
     var theComment = file.match(/\/\*\s*?require-emscripten[: ]\s*?(.*?)\s*?\*\//)
 
     return {
+        emccExecutable: emccExecutable,
         toBitcode: toBitcode,
         cliArgs: theComment ? theComment[1].trim() : ''
     }
@@ -64,6 +71,8 @@ function (file, config) {
         file = bcOutp
     }
 
+    var command = config.emccExecutable ? config.emccExecutable : 'emcc'
+
     var preJs = __dirname + '/pre-js.prejs'
     var postJs = __dirname + '/post-js.postjs'
 
@@ -82,7 +91,7 @@ function (file, config) {
             [])
         .concat(['-o', outp])
 
-    cp.spawnSync('emcc', commandArgs)
+    cp.spawnSync(command, commandArgs)
 
     if (config.toBitcode) {
         fs.unlinkSync(bcOutp)

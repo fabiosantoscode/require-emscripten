@@ -1,5 +1,6 @@
 
 reqEm = require '..'
+child_process = require 'child_process'
 ok = require 'assert'
 sinon = require 'sinon'
 
@@ -14,6 +15,12 @@ describe 'readConfig', () ->
     it 'finds preprocessor commands', () ->
         ok.equal reqEm.readConfig('/* require-emscripten-to-bitcode BITCODER $INPUT $OUTPUT */', { INPUT: 'inpt', OUTPUT: 'outp' }).toBitcode,
             'BITCODER $INPUT $OUTPUT'
+
+    it 'finds the alternate emcc command/path', () ->
+        ok.equal(
+            reqEm.readConfig('/* require-emscripten-emcc-executable /path/to/emcc command */').emccExecutable,
+            '/path/to/emcc command'
+        )
 
 describe 'compile', () ->
 
@@ -30,4 +37,23 @@ describe 'compile', () ->
         reqEm.compile('foobar.c', {})
 
         ok readConfig.calledOnce, 'readConfig not called again'
+
+    it 'calls `sh.spawnSync` with the emcc command and some args', sinon.test () ->
+        sh = this.stub child_process, 'spawnSync'
+        this.stub(require('fs'), 'readFileSync')
+            .returns '/* some C */'
+
+        reqEm.compile('lel.c',)
+        ok sh.calledOnce
+        ok sh.calledWith 'emcc'
+        ok sh.lastCall.args[1].length > 0
+
+    it 'calls `sh.spawnSync` with alternate emcc command if given through opts', sinon.test () ->
+        sh = this.stub child_process, 'spawnSync'
+        this.stub(require('fs'), 'readFileSync')
+            .returns '/* some C */'
+
+        reqEm.compile('lel.c', { emccExecutable: '/alt/emcc' })
+        ok sh.calledOnce
+        ok sh.calledWith '/alt/emcc'
 

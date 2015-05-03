@@ -52,11 +52,11 @@ This is really important. If it doesn't work for you or you had a hard time doin
 This loads requireEmscripten into node. Basic stuff. requireEmscripten is a function but it does have a couple of methods:
 
 
-## var myModule = requireEmscripten(__dirname + '/my-module.c');
+## var myModule = requireEmscripten(__dirname + '/my-module.c'/*, options?*/);
 
 Compiles a file into JS using emscripten, then requires it. Basically `sh('emcc $filename -o $filename.requireemscripten.js'); return require(filename + '.requireemscripten.js');`
 
-You can customize the arguments passed to `emcc` by adding special comments to your files you want to compile.
+You can customize the arguments passed to `emcc` by adding special comments to your files you want to compile. You can also pass an options hash as the second argument.
 
 ## myModule (a compiled Module object which you got from requireEmscripten() or require())
 
@@ -71,14 +71,37 @@ This is an Emscripten Module object. Refer to their docs to figure out how to wo
 
 The second argument to `requireEmscripten` is an object containing options. These are the same options you can pass on the top of your C/C++ files, albeit passed as a plain JS object.
 
+The `emccExecutable` option changes the `emcc` executable. By default it just uses `emcc` from your PATH.
+
 The `toBitcode` option denotes a command you might want to use on the file before emscripten sees it. For example, since emscripten cannot read Lisp or Rust, you can put a Rust or Clasp (LLVM Lisp) compilation command in this option. Use `$INPUT` and `$OUTPUT` in this string. They will be replaced with absolute paths to your input and output (llvm bitcode) files, respectively.
 
-The `cliArgs` option is a string containing more CLI arguments to the `emcc` command. Examples are `-O2` to enable some optimization.
+The `cliArgs` option is an array containing more CLI arguments to the `emcc` command. Examples are `-O2` to enable some optimization.
 
+Putting it all together:
+
+```
+    requireEmscripten(__dirname + '/filename.c', {
+        emccExecutable: 'emcc',  /*
+            Your own alternate `emcc` executable */
+        toBitcode: 'command-to-turn-filename.c-into-bitcode',  /*
+            A command which turns your file into LLVM bitcode. Useful
+            to compile LLVM languages with this, because emscripten
+            only recognizes C/C++ files. Read more below. */
+        cliArgs: ['extra arguments to emcc', 'such as', '-O3']  /*
+            Pass more arguments to emcc. */
+    })
+```
+
+None of these are mandatory.
 
 # Directives to the compiler
 
 You put these in your C/C++/whatever files.
+
+
+## `/* require-emscripten-emcc-executable: /alt/emcc */`
+
+This changes the `emcc` executable we use. Same as the `emccExecutable` option.
 
 
 ## `/* require-emscripten: ... */`
@@ -107,8 +130,8 @@ So if you're writing [rust](http://rust-lang.org) (which compiles to LLVM bitcod
 
 Some variables are expanded:
 
- * $INPUT - The file this comment is on
- * $OUTPUT - The file where require-emscripten is hoping to see some LLVM bitcode.
+ * `$INPUT` - The file this comment is on
+ * `$OUTPUT` - The file where require-emscripten is hoping to see some LLVM bitcode.
 
 So for example, for rust (see more in rust-example/example.js and rust-example/main.rs) put this directive on the top of the file:
 
