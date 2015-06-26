@@ -39,9 +39,11 @@ Open up the node console and type:
 
 # Use in the browser with browserify
 
-Just add `browerify/transform.js` in this repo to your browserify transforms. Refer to the browserify documentation to do so.
+Add `browerify/transform.js` in this repo to your browserify transforms. Refer to the browserify documentation to do so.
 
-This is really important. If it doesn't work for you or you had a hard time doing it, please file an issue.
+If Browserify complains about the (excellent) `ws` module not being installed, add the --ignore-missing option to your browserify incantation (Thanks @nfroidure!). This is an emscripten soft dependency which your project will probably not need, but browserify will not know this and do its job on that `require("ws")` call. If your project does need it, just install it ;)
+
+This feature of require-emscripten is really important. If it doesn't work for you or you had a hard time doing it, please file an issue and I will try to fix it.
 
 
 # API
