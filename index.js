@@ -4,6 +4,7 @@ var assert = require('assert')
 var path = require('path')
 var fs = require('fs')
 var cp = require('child_process')
+var os = require('os')
 
 module.exports = function requireEmscripten(file, options) {
     assert(path.isAbsolute(file),
@@ -52,6 +53,8 @@ function readConfig(file) {
     }
 }
 
+var emccOrEmccBat = os.type() === 'Windows_NT' ? 'emcc.bat' : 'emcc'
+
 var compile =
 module.exports.compile =
 function (file, config) {
@@ -71,7 +74,8 @@ function (file, config) {
         file = bcOutp
     }
 
-    var command = config.emccExecutable ? config.emccExecutable : 'emcc'
+    var command = config.emccExecutable ? config.emccExecutable :
+      emccOrEmccBat;
 
     var preJs = __dirname + '/pre-js.prejs'
     var postJs = __dirname + '/post-js.postjs'
