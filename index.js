@@ -95,7 +95,13 @@ function (file, config) {
             [])
         .concat(['-o', outp])
 
-    cp.spawnSync(command, commandArgs)
+    var result = cp.spawnSync(command, commandArgs)
+
+    if (result.error)
+      throw result.error
+
+    if (result.status)
+      throw new Error('emcc command failed!\n' + result.stderr + '')
 
     if (config.toBitcode) {
         fs.unlinkSync(bcOutp)
