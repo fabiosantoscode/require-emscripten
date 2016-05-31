@@ -90,7 +90,7 @@ describe 'browserify integration', () ->
             fs.unlinkSync filename
         if ret.status is 0
             return ret.stdout.toString()
-        throw ret.stderr
+        throw new Error ret.stderr.toString()
 
     it 'can transform requireEmscripten() calls', () ->
         fs.writeFileSync __dirname + '/my-c-file.c', 'int foo(){return 2;}'
