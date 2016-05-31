@@ -2,7 +2,8 @@
 requireEmscripten = require '..'
 ok = require 'assert'
 fs = require 'fs'
-sh = require('child_process').execSync
+cp = require 'child_process'
+sh = cp.execSync
 
 describe 'require("require-emscripten")() in node', () ->
     testcppfile = __dirname + '/reqemtest.c'
@@ -81,14 +82,15 @@ describe 'browserify integration', () ->
     toBrowserified = (s) ->
         filename = __dirname + '/.test-functional-with-browserify.js'
         fs.writeFileSync(filename, s)
-        ret = sh [
-            './node_modules/browserify/bin/cmd.js',
-            '-t ' + __dirname + '/../browserify/transform.js',
+        ret = cp.spawnSync './node_modules/browserify/bin/cmd.js', [
+            '-t', (__dirname + '/../browserify/transform.js'),
             filename,
-        ].join ' '
+        ]
         try
             fs.unlinkSync filename
-        return ret
+        if ret.status is 0
+            return ret.stdout.toString()
+        throw ret.stderr
 
     it 'can transform requireEmscripten() calls', () ->
         fs.writeFileSync __dirname + '/my-c-file.c', 'int foo(){return 2;}'
@@ -100,6 +102,7 @@ describe 'browserify integration', () ->
 
         ok result, 'there is some result'
 
+        console.log result
         ok(/YHEA/.test(result), 'it has our console.log still')
         ok(/_foo/.test(result), 'it has _foo somewhere in it')
         ok(/require.*?\/my-c-file.c/.test(result), 'it contains the require() call redirected to the C file')
