@@ -22,6 +22,7 @@ describe 'require("require-emscripten")() in node', () ->
     after () ->
         try
             fs.unlinkSync testcppfile
+            fs.unlinkSync testcppfile + '.requireemscripten.js'
 
     it 'returns a Module object', () ->
         mod = requireEmscripten testcppfile
@@ -102,7 +103,6 @@ describe 'browserify integration', () ->
 
         ok result, 'there is some result'
 
-        console.log result
         ok(/YHEA/.test(result), 'it has our console.log still')
         ok(/_foo/.test(result), 'it has _foo somewhere in it')
         ok(/require.*?\/my-c-file.c/.test(result), 'it contains the require() call redirected to the C file')
@@ -163,6 +163,6 @@ describe 'browserify integration', () ->
         afterEach () ->
             try
                 fs.unlinkSync(__dirname + '/my-c-file.c')
-            try
+                fs.unlinkSync(__dirname + '/my-c-file.c.requireemscripten.js')
                 fs.unlinkSync(__dirname + '/bundle')
 
