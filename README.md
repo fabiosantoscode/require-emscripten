@@ -10,21 +10,23 @@ This will use Emscripten's `emcc` in your PATH to compile things you require() i
 # Example
 
 (test.c is in the example directory in this repo)
-
-    /* I am a counter */
-    int foo () {
-        static int i = 0;
-        return i++;
-    }
+```c++
+/* I am a counter */
+int foo () {
+    static int i = 0;
+    return i++;
+}
+```
 
 Open up the node console and type:
+```js
+const requireEmscripten = require('require-emscripten')
+const counter = requireEmscripten(__dirname + '/example/test.c')._foo  // do NOT let node.js print the whole module to the console. It will get your CPU to 100% and take AGES
 
-    var requireEmscripten = require('require-emscripten')
-    var counter = requireEmscripten(__dirname + '/example/test.c')._foo  // do NOT let node.js print the whole module to the console. It will get your CPU to 100% and take AGES
-    console.log(counter())  // -> 0
-    console.log(counter())  // -> 1
-    console.log(counter())  // -> 2
-
+console.log(counter())  // -> 0
+console.log(counter())  // -> 1
+console.log(counter())  // -> 2
+```
 
 # How to install
 
@@ -81,17 +83,17 @@ The `cliArgs` option is an array containing more CLI arguments to the `emcc` com
 
 Putting it all together:
 
-```
-    requireEmscripten(__dirname + '/filename.c', {
-        emccExecutable: 'emcc',  /*
-            Your own alternate `emcc` executable */
-        toBitcode: 'command-to-turn-filename.c-into-bitcode',  /*
-            A command which turns your file into LLVM bitcode. Useful
-            to compile LLVM languages with this, because emscripten
-            only recognizes C/C++ files. Read more below. */
-        cliArgs: ['extra arguments to emcc', 'such as', '-O3']  /*
-            Pass more arguments to emcc. */
-    })
+```js
+requireEmscripten(__dirname + '/filename.c', {
+    emccExecutable: 'emcc',  /*
+        Your own alternate `emcc` executable */
+    toBitcode: 'command-to-turn-filename.c-into-bitcode',  /*
+        A command which turns your file into LLVM bitcode. Useful
+        to compile LLVM languages with this, because emscripten
+        only recognizes C/C++ files. Read more below. */
+    cliArgs: ['extra arguments to emcc', 'such as', '-O3']  /*
+        Pass more arguments to emcc. */
+})
 ```
 
 None of these are mandatory.
