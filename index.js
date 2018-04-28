@@ -97,10 +97,10 @@ function (file, config) {
 
     var result = cp.spawnSync(command, commandArgs)
 
-    if (result.error)
+    if (result && result.error)
       throw result.error
 
-    if (result.status)
+    if (result && result.status)
       throw new Error('emcc command failed!\n' + result.stderr + '')
 
     if (config.toBitcode) {
