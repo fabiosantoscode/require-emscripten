@@ -4,8 +4,12 @@ dist: trusty
 before_install:
   - cd /tmp
   - git clone https://github.com/juj/emsdk.git
-  - cd emsdk && ./emsdk update-tags && ./emsdk install latest && source emsdk_env.sh
+  - cd emsdk
+  - ./emsdk update-tags
+  - ./emsdk install latest
+  - source emsdk_env.sh
 test:
+  - source /tmp/emsdk/emsdk_env.sh
   - npm run test
 node_js:
   - "4"
