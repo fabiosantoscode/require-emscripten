@@ -9,6 +9,8 @@ before_install:
   - python ./emsdk-portable/emsdk install latest
   - python ./emsdk-portable/emsdk activate latest
   - sudo python ./emsdk-portable/emsdk activate latest --global
+test:
+  - npm run test
 node_js:
   - "4"
   - "10"
