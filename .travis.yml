@@ -4,7 +4,7 @@ dist: trusty
 before_install:
   - cd /tmp
   - git clone https://github.com/juj/emsdk.git
-  - cd emsdk && git pull && ./emsdk update tags && ./emsdk install latest && ./emsdk update latest && source emsdk_env.sh
+  - cd emsdk && git pull && ./emsdk update-tags && ./emsdk install latest && ./emsdk update latest && source emsdk_env.sh
 test:
   - npm run test
 node_js:
