@@ -3,12 +3,8 @@ sudo: required
 dist: trusty
 before_install:
   - cd /tmp
-  - curl -s https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz > emsdk-portable.tar.gz
-  - tar --extract --verbose --file emsdk-portable.tar.gz
-  - python ./emsdk-portable/emsdk update
-  - python ./emsdk-portable/emsdk install latest
-  - python ./emsdk-portable/emsdk activate latest
-  - sudo python ./emsdk-portable/emsdk activate latest --global
+  - git clone https://github.com/juj/emsdk.git
+  - cd emsdk && ./emsdk install latest && ./emsdk update latest && source emsdk_env.sh
 test:
   - npm run test
 node_js:
