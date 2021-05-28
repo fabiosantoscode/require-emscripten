@@ -21,7 +21,7 @@
   "dependencies": {
     "static-module": "^3.0.0",
     "through": "^2.3.6",
-    "ws": "^6.0.0"
+    "ws": "^7.4.5"
   },
   "repository": {
     "type": "git",
